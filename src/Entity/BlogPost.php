@@ -19,16 +19,22 @@ class BlogPost
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $description;
+    private $subtitle;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'blogPosts')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $content;
+
+    #[ORM\Column(type: 'date')]
+    private $createdOn;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $headImage;
+
+    #[ORM\Column(type: 'array', nullable: true)]
+    private $extraImages = [];
+
+    #[ORM\OneToMany(mappedBy: 'blogPosts', targetEntity: User::class)]
     private $createdBy;
-
-    public function __construct()
-    {
-        $this->createdBy = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -47,14 +53,14 @@ class BlogPost
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getContent(): ?string
     {
-        return $this->description;
+        return $this->content;
     }
 
-    public function setDescription(string $description): self
+    public function setContent(string $content): self
     {
-        $this->description = $description;
+        $this->content = $content;
 
         return $this;
     }
@@ -71,4 +77,51 @@ class BlogPost
         return $this;
     }
 
+    public function getSubtitle(): ?string
+    {
+        return $this->subtitle;
+    }
+
+    public function setSubtitle(string $subtitle): self
+    {
+        $this->subtitle = $subtitle;
+
+        return $this;
+    }
+
+    public function getCreatedOn(): ?\DateTimeInterface
+    {
+        return $this->createdOn;
+    }
+
+    public function setCreatedOn(\DateTimeInterface $createdOn): self
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    public function getHeadImage(): ?string
+    {
+        return $this->headImage;
+    }
+
+    public function setHeadImage(string $headImage): self
+    {
+        $this->headImage = $headImage;
+
+        return $this;
+    }
+
+    public function getExtraImages(): ?array
+    {
+        return $this->extraImages;
+    }
+
+    public function setExtraImages(?array $extraImages): self
+    {
+        $this->extraImages = $extraImages;
+
+        return $this;
+    }
 }

@@ -11,6 +11,7 @@ use Nubs\RandomNameGenerator\All;
 
 class BlogPostFixtures extends Fixture implements DependentFixtureInterface
 {
+    private $lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis.";
     private $nameGenerator;
 
     public function __construct()
@@ -32,8 +33,11 @@ class BlogPostFixtures extends Fixture implements DependentFixtureInterface
         $blogPost = new BlogPost();
 
         $blogPost->setTitle($this->nameGenerator->getName());
-        $blogPost->setDescription($this->nameGenerator->getName());
+        $blogPost->setContent($this->lorem);
+        $blogPost->setSubtitle($this->nameGenerator->getName());
+        $blogPost->setCreatedOn(new \DateTime());
         $blogPost->setCreatedBy($this->getReference($userReference));
+        $blogPost->setHeadImage('dog-puppy.jpg');
 
         $manager->persist($blogPost);
     }

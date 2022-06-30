@@ -1,0 +1,8 @@
+{% form_theme form 'form/theme.html.twig' %}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1 class="text-xl font-bold py-2">Create Post</h1>
+    {{ form_start(form) }}
+
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ blog_post.title }}{% endblock %}
+{% block body %}
+
+<div class="container m-2 flex">
+    <div class="mx-auto">
+        <h1 class="text-4xl font-bold py-2 text-headline">{{ blog_post.title }}</h1>
+        <h2 class="py-2">Created by: {{ blog_post.createdBy.username}}</h2>
+        <p class="leading-6 py-2 text-paragraph">
+            {{ blog_post.content }}
+        </p>
+    </div>
+</div>
+
+{% endblock %}
