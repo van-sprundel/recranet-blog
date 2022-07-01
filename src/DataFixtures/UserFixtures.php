@@ -7,16 +7,19 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Nubs\RandomNameGenerator\All;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
     public const USER_1_REFERENCE = 'user-1';
     public const ADMIN_USER_REFERENCE = 'admin-user';
     private $nameGenerator;
+    private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct()
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->nameGenerator = All::create();
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     public function load(ObjectManager $manager): void
@@ -32,7 +35,11 @@ class UserFixtures extends Fixture
 
         $user->setUsername($this->nameGenerator->getName());
         $user->setFullName($this->nameGenerator->getName());
-        $user->setCreatedOn(new \DateTime());
+        $user->setEmail($reference . "@gmail.com");
+        $user->setPassword($this->userPasswordHasher->hashPassword(
+            $user,
+            $reference
+        ));
 
         $manager->persist($user);
         $this->setReference($reference, $user);

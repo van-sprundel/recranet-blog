@@ -26,17 +26,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\ManyToOne(targetEntity: BlogPost::class, inversedBy: 'createdBy')]
+    #[ORM\OneToMany(mappedBy:'createdBy', targetEntity: BlogPost::class)]
     private $blogPosts;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $username;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $firstName;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $lastName;
+    private $fullName;
 
     public function getId(): ?int
     {
@@ -132,26 +129,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getFullName(): ?string
     {
-        return $this->firstName;
+        return $this->fullName;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFullName(string $fullName): self
     {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(string $lastName): self
-    {
-        $this->lastName = $lastName;
+        $this->fullName = $fullName;
 
         return $this;
     }

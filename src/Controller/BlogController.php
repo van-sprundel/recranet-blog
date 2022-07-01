@@ -3,35 +3,44 @@
 namespace App\Controller;
 
 use App\Entity\BlogPost;
-use App\Form\Type\BlogPostType;
+use App\Entity\User;
+use App\Form\BlogPostType;
 use App\Repository\BlogPostRepository;
-use Doctrine\ORM\EntityManager;
+use App\Repository\UserAuthRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class BlogController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
     private BlogPostRepository $blogPostRepository;
+    private $security;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(
+        LoggerInterface        $logger,
+        EntityManagerInterface $entityManager,
+        Security               $security
+    )
     {
         $this->entityManager = $entityManager;
         $this->blogPostRepository = $entityManager->getRepository(BlogPost::class);
+        $this->logger = $logger;
+        $this->security = $security;
     }
 
     #[Route('/blogs', name: 'blogs')]
     public function index(): Response
     {
         $blogPosts = $this->blogPostRepository->findAll();
-
 
         return $this->render('blog/index.html.twig', [
             'blog_posts' => $blogPosts,
@@ -48,7 +57,11 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $newBlogpost = $form->getData();
             $newBlogpost->setCreatedOn(new \DateTime());
-//            $newBlogpost->setCreatedBy();
+            $user = $this->getUser();
+
+            if ($user) {
+                $newBlogpost->setCreatedBy($user);
+            }
 
             $this->entityManager->persist($newBlogpost);
             $this->entityManager->flush();

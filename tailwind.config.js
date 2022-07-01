@@ -15,7 +15,8 @@ module.exports = {
             'highlight': '#3da9fc',
             'stroke': '#09067',
             'secondary': '#90b4ce',
-            'tertiary': '#ef4565'
+            'tertiary': '#ef4565',
+            'red': '#ef4505',
         },
         extend: {},
     },
