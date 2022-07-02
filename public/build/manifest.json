@@ -1,6 +1,6 @@
 {
-  "build/app.css": "/build/app.11becf8b.css",
-  "build/app.js": "/build/app.dd4da228.js",
-  "build/runtime.js": "/build/runtime.61b1725c.js",
-  "build/186.14bc82ce.js": "/build/186.14bc82ce.js"
+  "build/app.css": "http://localhost:8080/build/app.css",
+  "build/app.js": "http://localhost:8080/build/app.js",
+  "build/runtime.js": "http://localhost:8080/build/runtime.js",
+  "build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_fu-4ca44c.js": "http://localhost:8080/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_fu-4ca44c.js"
 }
