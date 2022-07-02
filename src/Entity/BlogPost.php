@@ -31,7 +31,7 @@ class BlogPost
     #[Assert\Length(min: 3, max: 255)]
     private $content;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'datetime')]
     private $createdOn;
 
     #[ORM\Column(type: 'string', length: 255)]

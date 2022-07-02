@@ -43,8 +43,7 @@ class BlogController extends AbstractController
     #[Route('/blogs', name: 'blogs')]
     public function index(): Response
     {
-        $blogPosts = $this->blogPostRepository->findAll();
-
+        $blogPosts = $this->blogPostRepository->findBy([], ['createdOn' => 'DESC']);
         return $this->render('blog/index.html.twig', [
             'blog_posts' => $blogPosts,
         ]);
@@ -54,11 +53,14 @@ class BlogController extends AbstractController
     public function myBlog(): Response
     {
         $user = $this->getUser();
-        $blogPosts = $this->blogPostRepository->findBy(['createdBy'=> $user]);
+        $blogPosts = $this->blogPostRepository->findBy(
+            ['createdBy' => $user],
+            ['createdOn' => 'DESC']
+        );
 
         return $this->render('blog/my_blog.html.twig', [
             'blog_posts' => $blogPosts,
-            'user'=> $user
+            'user' => $user
         ]);
     }
 
@@ -75,16 +77,18 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $newBlogpost = $form->getData();
 
-            $originalImageName = pathinfo($imageUploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
+            $originalImageName = pathinfo($imageUploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
             $safeImageName = $slugger->slug($originalImageName);
-            $newImageName = $safeImageName.'-'.uniqid().'-'.$imageUploadedFile->guessExtension();
+            $newImageName = $safeImageName . '-' . uniqid() . '.' . $imageUploadedFile->guessExtension();
 
             try {
                 $imageUploadedFile->move(
                     $this->getParameter('images_directory'),
                     $newImageName
                 );
-            } catch (FileException $e) {}
+            } catch (FileException $e) {
+                echo $e;
+            }
 
             $newBlogpost->setHeadImage($newImageName);
             $newBlogpost->setCreatedOn(new \DateTime());
