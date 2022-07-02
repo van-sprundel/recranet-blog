@@ -15,7 +15,7 @@
             <ul class="mx-auto">
                 {% for blogPost in blog_posts %}
                     <li class="m-2 p-2">
-                        {% include 'blog/blog_post.html.twig'  %}
+                        {{ component('blog_post', { blogPost: blogPost, enableEdit:true }) }}
                     </li>
                 {% endfor %}
             </ul>

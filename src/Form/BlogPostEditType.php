@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-class BlogPostType extends AbstractType
+class BlogPostEditType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -26,24 +26,6 @@ class BlogPostType extends AbstractType
             ->add('title', TextType::class)
             ->add('subtitle', TextType::class)
             ->add('content', TextType::class)
-            ->add('headImage', FileType::class,[
-                'label'=> 'Main image (required)',
-                'mapped'=> false,
-                'required'=>false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '12m',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid image',
-                    ])]
-            ])
-            ->add('extraImages', FileType::class, [
-                'multiple' => true,
-                'required' => false
-            ])
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'bg-button text-button-text py-2 px-5 mt-2 rounded'],
             ]);

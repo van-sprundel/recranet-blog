@@ -25,6 +25,7 @@
         "symfony/runtime": "6.1.*",
         "symfony/security-bundle": "6.1.*",
         "symfony/twig-bundle": "6.1.*",
+        "symfony/ux-twig-component": "^2.2",
         "symfony/validator": "6.1.*",
         "symfony/webpack-encore-bundle": "^1.14",
         "symfony/yaml": "6.1.*",

@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\BlogPost;
 use App\Entity\User;
-use App\Form\BlogPostType;
+use App\Form\BlogPostCreateType;
+use App\Form\BlogPostEditType;
 use App\Repository\BlogPostRepository;
 use App\Repository\UserAuthRepository;
 use App\Repository\UserRepository;
@@ -72,7 +73,7 @@ class BlogController extends AbstractController
     public function create(Request $request, SluggerInterface $slugger): Response
     {
         $blogPost = new BlogPost();
-        $form = $this->createForm(BlogPostType::class, $blogPost);
+        $form = $this->createForm(BlogPostCreateType::class, $blogPost);
         $form->handleRequest($request);
 
         /* @var UploadedFile $imageUploadedFile */
@@ -87,11 +88,10 @@ class BlogController extends AbstractController
 
             if ($extraImageUploadedFile) {
                 foreach ($extraImageUploadedFile as $uploadedImage) {
-                   if ($uploadedImage !== null) {
-                       $newImageName = $this->CreateFileName($uploadedImage, $slugger);
-                       $newBlogpost->addExtraImage($newImageName);
-                   }
-
+                    if ($uploadedImage != null) {
+                        $newImageName = $this->CreateFileName($uploadedImage, $slugger);
+                        $newBlogpost->addExtraImage($newImageName);
+                    }
                 }
             }
 
@@ -112,6 +112,34 @@ class BlogController extends AbstractController
         ]);
     }
 
+    #[Route('/blogs/{id}/edit', name: 'blogEdit')]
+    #[IsGranted('ROLE_USER')]
+    public function edit(
+        int              $id,
+        Request          $request,
+        SluggerInterface $slugger
+    ): Response
+    {
+        $blogPost = $this->blogPostRepository->find($id);
+        $form = $this->createForm(BlogPostEditType::class, $blogPost);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newBlogpost = $form->getData();
+
+            $blogPost->setTitle($newBlogpost->getTitle());
+            $blogPost->setSubtitle($newBlogpost->getSubtitle());
+            $blogPost->setContent($newBlogpost->getContent());
+
+            $this->entityManager->flush();
+            return $this->redirect('/blogs/' . $blogPost->getId());
+        }
+
+        return $this->renderForm('blog/edit.html.twig', [
+            'form' => $form
+        ]);
+    }
+
     #[Route('/blogs/{id}', name: 'blogById')]
     public function getById(int $id): Response
     {
@@ -126,7 +154,7 @@ class BlogController extends AbstractController
     }
 
     public function CreateFileName(
-        UploadedFile $item,
+        UploadedFile     $item,
         SluggerInterface $slugger
     ): string
     {
