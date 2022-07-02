@@ -125,9 +125,17 @@ class BlogPost
         return $this->extraImages;
     }
 
-    public function setExtraImages(?array $extraImages): self
+    public function addExtraImage(string $extraImage): self
     {
-        $this->extraImages = $extraImages;
+        $this->extraImages[] = $extraImage;
+
+        return $this;
+    }
+
+
+    public function removeExtraImage(string $extraImage): self
+    {
+        unset($this->extraImages[$extraImage]);
 
         return $this;
     }

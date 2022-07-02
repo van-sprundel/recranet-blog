@@ -15,21 +15,7 @@
             <ul class="mx-auto">
                 {% for blogPost in blog_posts %}
                     <li class="m-2 p-2">
-                        <div>
-                            <div class="block p-6 max-w-sm rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
-                                <img src="{{ asset('uploads/images/'~blogPost.headImage) }}"
-                                     class="rounded-lg my-2"
-                                     alt="blog-image"/>
-                                <h5 class="mb-2 text-2xl text-headline font-bold tracking-tight text-gray-900">
-                                    {{ blogPost.title }}
-                                </h5>
-                                <p class="font-normal text-paragraph py-1">
-                                    {{ blogPost.content }}
-                                </p>
-                                <a class="p-1 " href="/blogs/{{ blogPost.id }}">Read more...</a>
-
-                            </div>
-                        </div>
+                        {% include 'blog/blog_post.html.twig'  %}
                     </li>
                 {% endfor %}
             </ul>

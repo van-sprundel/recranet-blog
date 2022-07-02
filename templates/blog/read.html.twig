@@ -3,14 +3,26 @@
 {% block title %} {{ blog_post.title }}{% endblock %}
 {% block body %}
 
-<div class="container m-2 flex">
-    <div class="mx-auto">
-        <h1 class="text-4xl font-bold py-2 text-headline">{{ blog_post.title }}</h1>
-        <h2 class="py-2">Created by: {{ blog_post.createdBy.fullName}}</h2>
-        <p class="leading-6 py-2 text-paragraph">
-            {{ blog_post.content }}
-        </p>
+    <div class="container m-2 flex">
+        <div class="mx-auto">
+            <h1 class="text-4xl font-bold py-2 text-headline">{{ blog_post.title }}</h1>
+            <h2 class="py-2">Created by: {{ blog_post.createdBy.fullName }}</h2>
+            <div class="flex">
+                <img src="{{ asset('uploads/images/'~blog_post.headImage) }}"
+                     class="rounded-lg my-2 w-48"
+                     alt="blog-image"/>
+                {% if blog_post.extraImages is not empty %}
+                    {% for item in blog_post.extraImages %}
+                        <img src="{{ asset('uploads/images/'~item) }}"
+                             class="rounded-lg my-2 w-48"
+                             alt="blog-image"/>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <p class="leading-6 py-2 text-paragraph">
+                {{ blog_post.content }}
+            </p>
+        </div>
     </div>
-</div>
 
 {% endblock %}

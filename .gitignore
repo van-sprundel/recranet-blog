@@ -48,6 +48,10 @@
 # Backup entities generated with doctrine:generate:entities command
 **/Entity/*~
 
+# remove public dump
+/public/uploads/*
+!/public/uploads/images/dog-puppy.jpg
+
 # Embedded web-server pid file
 /.web-server-pid
 
