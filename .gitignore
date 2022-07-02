@@ -49,8 +49,8 @@
 **/Entity/*~
 
 # remove public dump
-/public/uploads/*
-!/public/uploads/images/dog-puppy.jpg
+#/public/uploads/*
+#!/public/uploads/images/dog-puppy.jpg
 
 # Embedded web-server pid file
 /.web-server-pid
