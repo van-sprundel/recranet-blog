@@ -4,21 +4,17 @@
 
 {% block body %}
     <div class="">
-        <div class="flex">
+        <div class="flex justify-start mx-20 my-2">
             <h1 class="text-4xl text-text">
                 My Blog
             </h1>
             <a class="my-auto mx-4 rounded py-2 px-4 bg-button text-button-text" href="{{ path('blogCreate') }}">Create
                 Post</a>
         </div>
-        <div class="flex">
-            <ul class="mx-auto">
+        <div class="flex flex-wrap justify-center">
                 {% for blogPost in blog_posts %}
-                    <li class="m-2 p-2">
                         {{ component('blog_post', { blogPost: blogPost, enableEdit:true }) }}
-                    </li>
                 {% endfor %}
-            </ul>
         </div>
     </div>
 

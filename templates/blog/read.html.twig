@@ -9,12 +9,12 @@
             <h2 class="py-2">Created by: {{ blog_post.createdBy.fullName }}</h2>
             <div class="flex items-end">
                 <img src="{{ asset('uploads/images/'~blog_post.headImage) }}"
-                     class="rounded-lg my-2 w-48 p-1"
+                     class="rounded-lg my-2 h-48 p-1"
                      alt="blog-image"/>
                 {% if blog_post.extraImages is not empty %}
                     {% for item in blog_post.extraImages %}
                         <img src="{{ asset('uploads/images/'~item) }}"
-                             class="rounded-lg my-2 h-44 p-1"
+                             class="border border-secondary  rounded-lg my-2 h-44 mx-1"
                              alt="blog-image"/>
                     {% endfor %}
                 {% endif %}
