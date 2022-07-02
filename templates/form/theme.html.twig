@@ -1,25 +1,29 @@
 {% use 'tailwind_2_layout.html.twig' %}
 
 {% block form_row %}
-    {% set row_class = row_class|default('block mt-2') %}
+    {% set row_class = row_class|default('block mt-4') %}
     {{ parent() }}
 {% endblock %}
 
 {% block form_label %}
-    {% set label_class = label_class|default('text-text') %}
+    {% set label_class = label_class|default('text-secondary font-bold text-md') %}
     {{ parent() }}
 {% endblock  %}
 
 {% block form_widget %}
-    {% set widget_class = widget_class|default('rounded border w-full py-1 px-2') %}
+    {% set widget_class = widget_class|default('rounded border border-secondary w-full py-1 px-2') %}
     {{ parent() }}
 {% endblock  %}
 
-{{ form_row(form.save, {
-    row_class: 'border mt-2 px-3 ...',
-    label_class: 'border font-semibold text-gray-600 ...',
-    error_item_class: 'border text-red-700 ...',
-    widget_class: 'border border-gray-200 bg-gray-50 ...',
-    widget_disabled_class: 'border border-dashed text-gray-200 ...',
-    widget_errors_class: 'border border-double border-red-500 bg-red-50 ...',
-}) }}
+{% block form_help %}
+    {% set help_class = widget_class|default('rounded border w-full py-1 px-2') %}
+    {{ parent() }}
+{% endblock  %}
+
+{% block form_errors %}
+    <ul>
+        {% for error in errors %}
+            <li class="text-red">{{ error.message }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -2,19 +2,72 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\RegistrationFormType;
+use App\Security\LoginAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
+use Nubs\RandomNameGenerator\All;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class SecurityController extends AbstractController
 {
+    private $nameGenerator;
+
+    public function __construct()
+    {
+        $this->nameGenerator = All::create();
+    }
+
+    #[Route('/register', name: 'app_register')]
+    public function register(
+        Request                     $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface      $entityManager,
+        UserAuthenticatorInterface  $authenticator,
+        LoginAuthenticator          $formAuthenticator
+    ): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $user->setUsername($user->getEmail());
+            $user->setFullName($this->nameGenerator->getName());
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+
+            return $authenticator->authenticateUser(
+                $user,
+                $formAuthenticator,
+                $request);
+        }
+
+        return $this->render('security/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
+
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('blogs');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

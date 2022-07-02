@@ -1,0 +1,21 @@
+{% extends 'security/base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div>
+        <h1 class="text-xl font-bold py-2">Register</h1>
+
+        {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button class="bg-button px-4 py-2 rounded mt-2 text-button-text" type="submit">
+            Register
+        </button>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

@@ -4,9 +4,13 @@
 
 {% block body %}
     <div class="">
-        <h1 class="text-4xl text-center text-text">
-            Recent posts
-        </h1>
+        <div class="flex">
+            <h1 class="text-4xl text-text">
+                My Blog
+            </h1>
+            <a class="my-auto mx-4 rounded py-2 px-4 bg-button text-button-text" href="{{ path('blogCreate') }}">Create
+                Post</a>
+        </div>
         <div class="flex">
             <ul class="mx-auto">
                 {% for blogPost in blog_posts %}
@@ -19,16 +23,11 @@
                                 <h5 class="mb-2 text-2xl text-headline font-bold tracking-tight text-gray-900">
                                     {{ blogPost.title }}
                                 </h5>
-                                <h5 class="text-secondary text-xl tracking-tight text-gray-900">
-                                    {{ blogPost.subtitle }}
-                                </h5>
-                                <h5 class="mb-2 text-paragraph tracking-tight text-gray-900">
-                                    Created on {{ blogPost.createdOn.format('d-m-Y') }}
-                                </h5>
                                 <p class="font-normal text-paragraph py-1">
                                     {{ blogPost.content }}
                                 </p>
                                 <a class="p-1 " href="/blogs/{{ blogPost.id }}">Read more...</a>
+
                             </div>
                         </div>
                     </li>

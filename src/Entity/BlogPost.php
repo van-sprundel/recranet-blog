@@ -6,6 +6,7 @@ use App\Repository\BlogPostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
 class BlogPost
@@ -15,16 +16,22 @@ class BlogPost
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 48)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 48)]
     private $title;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 48)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 48)]
     private $subtitle;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     private $content;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'datetime')]
     private $createdOn;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -33,7 +40,7 @@ class BlogPost
     #[ORM\Column(type: 'array', nullable: true)]
     private $extraImages = [];
 
-    #[ORM\OneToMany(mappedBy: 'blogPosts', targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'blogPosts')]
     private $createdBy;
 
     public function getId(): ?int

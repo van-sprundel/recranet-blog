@@ -3,56 +3,104 @@
 namespace App\Controller;
 
 use App\Entity\BlogPost;
-use App\Form\Type\BlogPostType;
+use App\Entity\User;
+use App\Form\BlogPostType;
 use App\Repository\BlogPostRepository;
-use Doctrine\ORM\EntityManager;
+use App\Repository\UserAuthRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class BlogController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
     private BlogPostRepository $blogPostRepository;
+    private $security;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(
+        LoggerInterface        $logger,
+        EntityManagerInterface $entityManager,
+        Security               $security
+    )
     {
         $this->entityManager = $entityManager;
         $this->blogPostRepository = $entityManager->getRepository(BlogPost::class);
+        $this->logger = $logger;
+        $this->security = $security;
     }
 
     #[Route('/blogs', name: 'blogs')]
     public function index(): Response
     {
-        $blogPosts = $this->blogPostRepository->findAll();
-
-
+        $blogPosts = $this->blogPostRepository->findBy([], ['createdOn' => 'DESC']);
         return $this->render('blog/index.html.twig', [
             'blog_posts' => $blogPosts,
         ]);
     }
 
+    #[Route('/my_blog', name: 'my_blog')]
+    public function myBlog(): Response
+    {
+        $user = $this->getUser();
+        $blogPosts = $this->blogPostRepository->findBy(
+            ['createdBy' => $user],
+            ['createdOn' => 'DESC']
+        );
+
+        return $this->render('blog/my_blog.html.twig', [
+            'blog_posts' => $blogPosts,
+            'user' => $user
+        ]);
+    }
+
     #[Route('/blogs/create', name: 'blogCreate')]
-    public function create(Request $request): Response
+    public function create(Request $request, SluggerInterface $slugger): Response
     {
         $blogPost = new BlogPost();
         $form = $this->createForm(BlogPostType::class, $blogPost);
         $form->handleRequest($request);
 
+        /** @var UploadedFile $imageUploadedFile */
+        $imageUploadedFile = $form->get('headImage')->getData();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $newBlogpost = $form->getData();
+
+            $originalImageName = pathinfo($imageUploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeImageName = $slugger->slug($originalImageName);
+            $newImageName = $safeImageName . '-' . uniqid() . '.' . $imageUploadedFile->guessExtension();
+
+            try {
+                $imageUploadedFile->move(
+                    $this->getParameter('images_directory'),
+                    $newImageName
+                );
+            } catch (FileException $e) {
+                echo $e;
+            }
+
+            $newBlogpost->setHeadImage($newImageName);
             $newBlogpost->setCreatedOn(new \DateTime());
-//            $newBlogpost->setCreatedBy();
+            $user = $this->getUser();
+
+            if ($user) {
+                $newBlogpost->setCreatedBy($user);
+            }
 
             $this->entityManager->persist($newBlogpost);
             $this->entityManager->flush();
-            return $this->redirect('/blogs');
+            return $this->redirect('/my_blog');
         }
 
         return $this->renderForm('blog/create.html.twig', [
