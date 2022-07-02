@@ -17,7 +17,7 @@ class BlogPost
     private $id;
 
     #[ORM\Column(type: 'string', length: 48)]
-    #[Assert\NotBlank(message: 'Titlefdss')]
+    #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 48)]
     private $title;
 
@@ -35,7 +35,6 @@ class BlogPost
     private $createdOn;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
     private $headImage;
 
     #[ORM\Column(type: 'array', nullable: true)]

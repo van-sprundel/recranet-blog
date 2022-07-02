@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class BlogPostType extends AbstractType
 {
@@ -25,7 +26,20 @@ class BlogPostType extends AbstractType
             ->add('title', TextType::class)
             ->add('subtitle', TextType::class)
             ->add('content', TextType::class)
-            ->add('headImage', FileType::class)
+            ->add('headImage', FileType::class,[
+                'label'=> 'Main image (required)',
+                'mapped'=> false,
+                'required'=>false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '12m',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image',
+                    ])]
+            ])
             ->add('extraImages', FileType::class, [
                 'multiple' => true,
                 'required' => false
