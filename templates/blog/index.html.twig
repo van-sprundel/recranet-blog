@@ -4,33 +4,14 @@
 
 {% block body %}
     <div class="">
-        <h1 class="text-4xl text-center text-text">
+        <h1 class="text-4xl text-center text-text my-2">
             Recent posts
         </h1>
         <div class="flex">
             <ul class="mx-auto">
                 {% for blogPost in blog_posts %}
                     <li class="m-2 p-2">
-                        <div>
-                            <div class="block p-6 max-w-sm rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
-                                <img src="{{ asset('uploads/images/'~blogPost.headImage) }}"
-                                     class="rounded-lg my-2"
-                                     alt="blog-image"/>
-                                <h5 class="mb-2 text-2xl text-headline font-bold tracking-tight text-gray-900">
-                                    {{ blogPost.title }}
-                                </h5>
-                                <h5 class="text-secondary text-xl tracking-tight text-gray-900">
-                                    {{ blogPost.subtitle }}
-                                </h5>
-                                <h5 class="mb-2 text-paragraph tracking-tight text-gray-900">
-                                    Created on {{ blogPost.createdOn.format('d-m-Y') }}
-                                </h5>
-                                <p class="font-normal text-paragraph py-1">
-                                    {{ blogPost.content }}
-                                </p>
-                                <a class="p-1 " href="/blogs/{{ blogPost.id }}">Read more...</a>
-                            </div>
-                        </div>
+                        {{ component('blog_post', { blogPost: blogPost }) }}
                     </li>
                 {% endfor %}
             </ul>

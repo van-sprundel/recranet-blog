@@ -48,14 +48,17 @@
 # Backup entities generated with doctrine:generate:entities command
 **/Entity/*~
 
+# remove public dump
+/public/uploads/*
+!/public/uploads/images/dog-puppy.jpg
+
 # Embedded web-server pid file
 /.web-server-pid
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
-/public/build/
+!/public/build/
+!/public/build/*
 npm-debug.log
 yarn-error.log
-composer.lock
-symfony.lock
 

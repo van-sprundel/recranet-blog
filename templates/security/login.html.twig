@@ -24,13 +24,18 @@
                value="{{ csrf_token('authenticate') }}"
         >
 
-        <button
-                class="bg-button px-4 py-2 rounded mt-2 text-button-text"
-                type="submit">
-            Sign in
-        </button>
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+        <div class="grid">
+            <a href="{{ path('app_register') }}" class="text-button my-2 min-w-full p-1">Register</a>
+            <button
+                    class="bg-button px-4 py-2 rounded mt-2 text-button-text"
+                    type="submit">
+                Sign in
+            </button>
+            {% if error %}
+                <div class="py-2 text-red">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+        </div>
+
+
     </form>
 {% endblock %}

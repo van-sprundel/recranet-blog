@@ -4,35 +4,17 @@
 
 {% block body %}
     <div class="">
-        <div class="flex">
+        <div class="flex justify-start mx-20 my-2">
             <h1 class="text-4xl text-text">
                 My Blog
             </h1>
             <a class="my-auto mx-4 rounded py-2 px-4 bg-button text-button-text" href="{{ path('blogCreate') }}">Create
                 Post</a>
         </div>
-        <div class="flex">
-            <ul class="mx-auto">
+        <div class="flex flex-wrap justify-center">
                 {% for blogPost in blog_posts %}
-                    <li class="m-2 p-2">
-                        <div>
-                            <div class="block p-6 max-w-sm rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
-                                <img src="{{ asset('uploads/images/'~blogPost.headImage) }}"
-                                     class="rounded-lg my-2"
-                                     alt="blog-image"/>
-                                <h5 class="mb-2 text-2xl text-headline font-bold tracking-tight text-gray-900">
-                                    {{ blogPost.title }}
-                                </h5>
-                                <p class="font-normal text-paragraph py-1">
-                                    {{ blogPost.content }}
-                                </p>
-                                <a class="p-1 " href="/blogs/{{ blogPost.id }}">Read more...</a>
-
-                            </div>
-                        </div>
-                    </li>
+                        {{ component('blog_post', { blogPost: blogPost, enableEdit:true, enableDelete: true }) }}
                 {% endfor %}
-            </ul>
         </div>
     </div>
 

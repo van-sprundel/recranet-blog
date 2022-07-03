@@ -12,10 +12,11 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body class="bg-background">
-{% include './navbar.html.twig' %}
-<div class="container mx-auto p-2">
-    {% block body %}{% endblock %}
+<body class="bg-background ">
+{% include 'navbar.html.twig' %}
+<div class="min-h-screen mx-auto p-2">
+    {% block body %}
+    {% endblock %}
 </div>
 </body>
 </html>
