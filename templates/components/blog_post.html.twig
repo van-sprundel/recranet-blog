@@ -15,11 +15,21 @@
         <p class="font-normal text-paragraph py-1">
             {{ blogPost.content }}
         </p>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-end">
             <a class="p-1 my-auto " href="/blogs/{{ blogPost.id }}">Read more...</a>
-            {% if enableEdit %}
-                <a href="{{ path('blogEdit', {id: blogPost.id}) }}" class="py-2 px-5 my-auto bg-button text-button-text rounded">Edit</a>
-            {% endif %}
+            <div class="flex flex-col">
+                {% if enableEdit %}
+                    <a href="{{ path('blogEdit', {id: blogPost.id}) }}"
+                       class="py-2 px-5 bg-button mx-auto text-button-text rounded">Edit</a>
+                {% endif %}
+                {% if enableDelete %}
+                    <form method="post" action="{{ path('deleteBlogById', {id: blogPost.id}) }}">
+                        <button type="submit"
+                                class="my-2 py-2 px-5 mx-auto text-button rounded">Delete
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

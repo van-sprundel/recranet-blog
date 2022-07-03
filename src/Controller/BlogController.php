@@ -153,6 +153,22 @@ class BlogController extends AbstractController
         }
     }
 
+    #[Route('/blogs/{id}/delete',name:'deleteBlogById',methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function deleteById(
+        int $id
+    ):Response
+    {
+        $blogPost = $this->blogPostRepository->find($id);
+
+        if($blogPost->getCreatedBy() ===$this->getUser()) {
+            $this->blogPostRepository->remove($blogPost);
+            $this->entityManager->flush();
+        }
+
+        return $this->redirectToRoute('my_blog');
+    }
+
     public function CreateFileName(
         UploadedFile     $item,
         SluggerInterface $slugger
@@ -173,5 +189,8 @@ class BlogController extends AbstractController
         }
         return $newImageName;
     }
+
+
+
 }
 

@@ -10,4 +10,5 @@ class BlogPostComponent
 {
     public BlogPost $blogPost;
     public bool $enableEdit = false;
+    public bool $enableDelete = false;
 }

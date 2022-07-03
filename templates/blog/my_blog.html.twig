@@ -13,7 +13,7 @@
         </div>
         <div class="flex flex-wrap justify-center">
                 {% for blogPost in blog_posts %}
-                        {{ component('blog_post', { blogPost: blogPost, enableEdit:true }) }}
+                        {{ component('blog_post', { blogPost: blogPost, enableEdit:true, enableDelete: true }) }}
                 {% endfor %}
         </div>
     </div>
