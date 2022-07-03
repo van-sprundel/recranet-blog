@@ -83,8 +83,10 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $newBlogpost = $form->getData();
 
-            $newHeadImage = $this->CreateFileName($imageUploadedFile, $slugger);
-            $newBlogpost->setHeadImage($newHeadImage);
+            if ($imageUploadedFile) {
+                $newHeadImage = $this->CreateFileName($imageUploadedFile, $slugger);
+                $newBlogpost->setHeadImage($newHeadImage);
+            }
 
             if ($extraImageUploadedFile) {
                 foreach ($extraImageUploadedFile as $uploadedImage) {
@@ -153,15 +155,15 @@ class BlogController extends AbstractController
         }
     }
 
-    #[Route('/blogs/{id}/delete',name:'deleteBlogById',methods: ['POST'])]
+    #[Route('/blogs/{id}/delete', name: 'deleteBlogById', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
     public function deleteById(
         int $id
-    ):Response
+    ): Response
     {
         $blogPost = $this->blogPostRepository->find($id);
 
-        if($blogPost->getCreatedBy() ===$this->getUser()) {
+        if ($blogPost->getCreatedBy() === $this->getUser()) {
             $this->blogPostRepository->remove($blogPost);
             $this->entityManager->flush();
         }
@@ -189,7 +191,6 @@ class BlogController extends AbstractController
         }
         return $newImageName;
     }
-
 
 
 }

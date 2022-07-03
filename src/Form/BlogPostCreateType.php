@@ -29,7 +29,7 @@ class BlogPostCreateType extends AbstractType
             ->add('headImage', FileType::class,[
                 'label'=> 'Main image (required)',
                 'mapped'=> false,
-                'required'=>false,
+                'required'=>true,
                 'constraints' => [
                     new File([
                         'maxSize' => '12m',
