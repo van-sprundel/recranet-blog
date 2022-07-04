@@ -17,7 +17,11 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -47,7 +51,7 @@ class BlogController extends AbstractController
     public function index(): Response
     {
         $blogPosts = $this->blogPostRepository->findBy([], ['createdOn' => 'DESC']);
-        $blogPosts = array_slice($blogPosts,0,5);
+        $blogPosts = array_slice($blogPosts, 0, 5);
         return $this->render('blog/index.html.twig', [
             'blog_posts' => $blogPosts,
         ]);
@@ -71,7 +75,7 @@ class BlogController extends AbstractController
 
     #[Route('/blogs/create', name: 'blogCreate')]
     #[IsGranted('ROLE_USER')]
-    public function create(Request $request, SluggerInterface $slugger): Response
+    public function create(Request $request, SluggerInterface $slugger, MailerInterface $emailer): Response
     {
         $blogPost = new BlogPost();
         $form = $this->createForm(BlogPostCreateType::class, $blogPost);
@@ -107,6 +111,7 @@ class BlogController extends AbstractController
 
             $this->entityManager->persist($newBlogpost);
             $this->entityManager->flush();
+            $this->sendEmail($emailer, $user, $blogPost);
             return $this->redirect('/my_blog');
         }
 
@@ -191,6 +196,24 @@ class BlogController extends AbstractController
             echo $e;
         }
         return $newImageName;
+    }
+
+    public function sendEmail(MailerInterface $mailer, UserInterface $user, BlogPost $blogPost)
+    {
+        $link = $this->generateUrl(
+            'blogById', [
+            'id' => $blogPost->getId()
+        ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $email = (new Email())
+            ->from('ramones@localhost.com')
+            ->to($user->getEmail())
+            ->priority(Email::PRIORITY_HIGH)
+            ->subject('Blog post uploaded successfully!')
+            ->text("Here's the link to your new blog post!" . $link);
+
+        $mailer->send($email);
     }
 
 
