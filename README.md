@@ -11,6 +11,8 @@ symfony:
 symfony server:start
 ```
 
+#### Optionally you can run the encore service (using tailwindcss)
+
 encore:
 
 ```shell
