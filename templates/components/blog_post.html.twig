@@ -7,7 +7,7 @@
             {{ blogPost.title }}
         </h5>
         <h5 class="text-secondary text-xl tracking-tight text-gray-900">
-            {{ blogPost.subtitle }}
+           by: {{ blogPost.createdBy.fullname }}
         </h5>
         <h5 class="mb-2 text-paragraph tracking-tight text-gray-900">
             Created on {{ blogPost.createdOn.format('d-m-Y') }}

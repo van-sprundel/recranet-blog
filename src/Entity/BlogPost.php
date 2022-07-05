@@ -43,6 +43,9 @@ class BlogPost
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'blogPosts')]
     private $createdBy;
 
+    #[ORM\OneToMany(mappedBy: 'blogPost', targetEntity: Comment::class)]
+    private ?Collection $comments;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -132,10 +135,36 @@ class BlogPost
         return $this;
     }
 
-
     public function removeExtraImage(string $extraImage): self
     {
         unset($this->extraImages[$extraImage]);
+
+        return $this;
+    }
+
+    public function getComments():?Collection
+    {
+        return  $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setBlogPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getBlogPost() === $this) {
+                $comment->setBlogPost(null);
+            }
+        }
 
         return $this;
     }
