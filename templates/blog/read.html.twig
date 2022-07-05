@@ -25,7 +25,9 @@
             </p>
 
             <label class="text-xl font-bold mt-4 mb-2">Comments ({{ blog_post.comments.count }}):</label>
-            {{ form(comment_form) }}
+            {% if app.user %}
+                {{ form(comment_form) }}
+            {% endif%}
             <div class="my-1">
                 {% for c in blog_post.comments|reverse %}
                     <div class=" flex border border-secondary rounded p-1">
